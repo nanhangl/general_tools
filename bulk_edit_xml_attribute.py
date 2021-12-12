@@ -13,6 +13,3 @@ for fileName in glob.glob("*.xml"):
     nameElement = objectElement.find("name")
     nameElement.text = "stairs"
     xmlTree.write(fileName, encoding='UTF-8', xml_declaration=True)
-
-
-
