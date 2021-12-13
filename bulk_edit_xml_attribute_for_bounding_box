@@ -1,0 +1,34 @@
+# the purpose of this script is to bulk edit an xml attribute
+
+import glob, os
+import xml.etree.ElementTree as ET
+from math import floor, ceil
+
+os.chdir("annotations_dir")
+fileList = os.listdir()
+
+
+originalHeight = 640
+newWidth = 170
+newHeight = 227
+timesDiff = 640/227
+
+for fileName in glob.glob("*.xml"):
+    xmlTree = ET.parse(fileName)
+    rootElement = xmlTree.getroot()
+    sizeElement = rootElement.find("size")
+    widthElement = sizeElement.find("width")
+    heightElement = sizeElement.find("height")
+    widthElement.text = str(newWidth)
+    heightElement.text = str(newHeight)
+    objectElement = rootElement.find("object")
+    bndboxElement = objectElement.find("bndbox")
+    xminElement = bndboxElement.find("xmin")
+    yminElement = bndboxElement.find("ymin")
+    xmaxElement = bndboxElement.find("xmax")
+    ymaxElement = bndboxElement.find("ymax")
+    xminElement.text = str(floor(int(xminElement.text)/timesDiff))
+    yminElement.text = str(floor(int(yminElement.text)/timesDiff))
+    xmaxElement.text = str(ceil(int(xmaxElement.text)/timesDiff))
+    ymaxElement.text = str(ceil(int(ymaxElement.text)/timesDiff))
+    xmlTree.write(fileName, encoding='UTF-8', xml_declaration=True)
